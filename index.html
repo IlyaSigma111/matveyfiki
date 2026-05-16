@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Матвейфики</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Montserrat:wght@300;400;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #0a0a0f;
+            --accent: #ff2d75;
+            --accent2: #7b2dff;
+            --accent3: #00d4ff;
+            --text: #ffffff;
+            --text-muted: #8a8a9a;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        .parallax-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .parallax-bg::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(123, 45, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(255, 45, 117, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(0, 212, 255, 0.1) 0%, transparent 70%);
+            animation: rotateBg 60s linear infinite;
+        }
+
+        @keyframes rotateBg {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: float 20s infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.5; }
+            90% { opacity: 0.5; }
+            100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 100;
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(10, 10, 15, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent), var(--accent2), var(--accent3));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 600;
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent), var(--accent3));
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        .hamburger span {
+            width: 30px;
+            height: 3px;
+            background: var(--text);
+            border-radius: 2px;
+            transition: 0.3s;
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3rem, 10vw, 8rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 span {
+            display: block;
+            background: linear-gradient(135deg, var(--accent), var(--accent3));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin-bottom: 2rem;
+        }
+
+        .glow-btn {
+            padding: 1rem 3rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text);
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .glow-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+
+        .glow-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 50px rgba(255, 45, 117, 0.5);
+        }
+
+        .fics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            padding: 2rem;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .fic-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            transition: transform 0.5s, box-shadow 0.5s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .fic-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 45, 117, 0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .fic-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 30px 60px rgba(255, 45, 117, 0.2);
+        }
+
+        .fic-card:hover::before {
+            opacity: 1;
+        }
+
+        .fic-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .fic-card p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+        }
+
+        .fic-card .meta {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .fic-card .tag {
+            background: rgba(123, 45, 255, 0.3);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        .add-section, .reader-section {
+            display: none;
+            min-height: 100vh;
+            padding: 6rem 2rem 2rem;
+        }
+
+        .add-section.active, .reader-section.active {
+            display: block;
+        }
+
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .form-container h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            color: var(--text);
+            font-size: 1rem;
+            font-family: inherit;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 30px rgba(255, 45, 117, 0.2);
+        }
+
+        .form-group textarea {
+            min-height: 200px;
+            resize: vertical;
+        }
+
+        .reader-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 30px;
+            padding: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .reader-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .reader-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .reader-content {
+            font-size: 1.2rem;
+            line-height: 2;
+            text-align: justify;
+        }
+
+        .reader-content p {
+            margin-bottom: 1.5rem;
+            text-indent: 2rem;
+        }
+
+        .reader-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .reader-nav button {
+            padding: 0.8rem 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 10px;
+            color: var(--text);
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .reader-nav button:hover {
+            background: rgba(255, 45, 117, 0.3);
+        }
+
+        .settings-bar {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .setting-btn {
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: var(--text);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .setting-btn:hover, .setting-btn.active {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), var(--accent3));
+            z-index: 1000;
+            transition: width 0.1s;
+        }
+
+        .back-btn {
+            position: fixed;
+            bottom: 2rem;
+            left: 2rem;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 99;
+            transition: transform 0.3s;
+        }
+
+        .back-btn.visible {
+            display: flex;
+        }
+
+        .back-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem;
+            color: var(--text-muted);
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        section {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.8s, transform 0.8s;
+        }
+
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 80%;
+                height: 100vh;
+                background: var(--bg-dark);
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                transition: right 0.3s;
+            }
+
+            .nav-links.open {
+                right: 0;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .fics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero h1 {
+                font-size: 3rem;
+            }
+        }
+
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 4rem;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="scroll-progress" id="scrollProgress"></div>
+    
+    <div class="parallax-bg"></div>
+    <div class="particles" id="particles"></div>
+
+    <nav>
+        <div class="logo">Матвейфики</div>
+        <div class="nav-links" id="navLinks">
+            <a href="#" onclick="showHome()">Главная</a>
+            <a href="#/add" onclick="showAdd()">Добавить</a>
+        </div>
+        <div class="hamburger" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <button class="back-btn" id="backBtn" onclick="goBack()">←</button>
+
+    <section class="hero" id="homeSection">
+        <h1>Мир <span>фанфиков</span></h1>
+        <p>Погрузись в бесконечные истории, созданные сообществом</p>
+        <button class="glow-btn" onclick="scrollToFics()">Начать читать</button>
+    </section>
+
+    <section id="ficsSection">
+        <h2 style="text-align:center;padding:2rem;font-family:'Playfair Display',serif;font-size:2rem;">📚 Популярные фанфики</h2>
+        <div class="fics-grid" id="ficsGrid"></div>
+    </section>
+
+    <div class="add-section" id="addSection">
+        <div class="form-container">
+            <h2>✨ Добавить фанфик</h2>
+            <form id="addForm">
+                <div class="form-group">
+                    <label>Название</label>
+                    <input type="text" id="ficTitle" placeholder="Введите название..." required>
+                </div>
+                <div class="form-group">
+                    <label>Описание</label>
+                    <textarea id="ficDesc" placeholder="Кратко о чем история..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Жанр</label>
+                    <input type="text" id="ficGenre" placeholder="Фэнтези, Романтика, Драма...">
+                </div>
+                <div class="form-group">
+                    <label>Текст фанфика</label>
+                    <textarea id="ficText" placeholder="Начинайте писать здесь..." style="min-height:400px;" required></textarea>
+                </div>
+                <button type="submit" class="glow-btn" style="width:100%;">Опубликовать</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="reader-section" id="readerSection">
+        <div class="settings-bar">
+            <button class="setting-btn" onclick="changeFontSize(-2)">A-</button>
+            <button class="setting-btn" onclick="changeFontSize(2)">A+</button>
+            <button class="setting-btn" onclick="toggleTheme()">🌓</button>
+        </div>
+        <div class="reader-container" id="readerContent"></div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, push, onValue, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCx96Hahv1ytHp-3o5WWk-omLQnrbtfWsU",
+            authDomain: "matveyfiki-57f7a.firebaseapp.com",
+            databaseURL: "https://matveyfiki-57f7a-default-rtdb.firebaseio.com",
+            projectId: "matveyfiki-57f7a",
+            storageBucket: "matveyfiki-57f7a.firebasestorage.app",
+            messagingSenderId: "500388540775",
+            appId: "1:500388540775:web:e3596a90b34a64abdfbfc2"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        let currentFicId = null;
+        let fontSize = 18;
+
+        window.showHome = function() {
+            document.getElementById('homeSection').classList.add('visible');
+            document.getElementById('ficsSection').style.display = 'block';
+            document.getElementById('addSection').classList.remove('active');
+            document.getElementById('readerSection').classList.remove('active');
+            document.getElementById('backBtn').classList.remove('visible');
+            window.scrollTo(0, 0);
+        };
+
+        window.showAdd = function() {
+            document.getElementById('homeSection').classList.remove('visible');
+            document.getElementById('ficsSection').style.display = 'none';
+            document.getElementById('addSection').classList.add('active');
+            document.getElementById('readerSection').classList.remove('active');
+            document.getElementById('backBtn').classList.add('visible');
+        };
+
+        window.showReader = function(id) {
+            currentFicId = id;
+            document.getElementById('homeSection').classList.remove('visible');
+            document.getElementById('ficsSection').style.display = 'none';
+            document.getElementById('addSection').classList.remove('active');
+            document.getElementById('readerSection').classList.add('active');
+            document.getElementById('backBtn').classList.add('visible');
+            
+            const ficRef = ref(db, 'fics/' + id);
+            onValue(ficRef, (snapshot) => {
+                const fic = snapshot.val();
+                if (fic) {
+                    renderReader(fic);
+                }
+            });
+        };
+
+        function renderReader(fic) {
+            const container = document.getElementById('readerContent');
+            const paragraphs = fic.text.split('\n').filter(p => p.trim());
+            container.innerHTML = `
+                <div class="reader-header">
+                    <h1>${fic.title}</h1>
+                    <p style="color:var(--text-muted);">${fic.description}</p>
+                    <div style="margin-top:1rem;">
+                        <span class="tag">${fic.genre || 'Без жанра'}</span>
+                    </div>
+                </div>
+                <div class="reader-content" style="font-size:${fontSize}px;" id="readerText">
+                    ${paragraphs.map(p => `<p>${p}</p>`).join('')}
+                </div>
+                <div class="reader-nav">
+                    <button onclick="prevChapter()">← Предыдущая</button>
+                    <button onclick="nextChapter()">Следующая →</button>
+                </div>
+            `;
+        }
+
+        window.changeFontSize = function(delta) {
+            fontSize = Math.max(14, Math.min(28, fontSize + delta));
+            const text = document.getElementById('readerText');
+            if (text) text.style.fontSize = fontSize + 'px';
+        };
+
+        window.toggleTheme = function() {
+            document.body.classList.toggle('light-mode');
+        };
+
+        window.scrollToFics = function() {
+            document.getElementById('ficsSection').scrollIntoView({ behavior: 'smooth' });
+        };
+
+        window.goBack = function() {
+            showHome();
+        };
+
+        window.toggleMenu = function() {
+            document.getElementById('navLinks').classList.toggle('open');
+        };
+
+        window.showToast = function(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        };
+
+        document.getElementById('addForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const fic = {
+                title: document.getElementById('ficTitle').value,
+                description: document.getElementById('ficDesc').value,
+                genre: document.getElementById('ficGenre').value,
+                text: document.getElementById('ficText').value,
+                createdAt: Date.now()
+            };
+            push(ref(db, 'fics'), fic).then(() => {
+                showToast('✨ Фанфик опубликован!');
+                e.target.reset();
+            });
+        });
+
+        const ficsRef = ref(db, 'fics');
+        onValue(ficsRef, (snapshot) => {
+            const grid = document.getElementById('ficsGrid');
+            const fics = snapshot.val();
+            if (!fics) {
+                grid.innerHTML = '<div class="empty-state"><h3>Пока нет фанфиков</h3><p>Будь первым, кто добавит историю!</p></div>';
+                return;
+            }
+            grid.innerHTML = Object.entries(fics).map(([id, fic]) => `
+                <div class="fic-card" onclick="showReader('${id}')">
+                    <h3>${fic.title}</h3>
+                    <p>${fic.description}</p>
+                    <div class="meta">
+                        <span class="tag">${fic.genre || 'Без жанра'}</span>
+                    </div>
+                </div>
+            `).join('');
+        });
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('section').forEach(s => observer.observe(s));
+        document.getElementById('homeSection').classList.add('visible');
+
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 30; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 20 + 's';
+            particle.style.animationDuration = (15 + Math.random() * 15) + 's';
+            particlesContainer.appendChild(particle);
+        }
+
+        window.addEventListener('scroll', () => {
+            const scrolled = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+            document.getElementById('scrollProgress').style.width = scrolled + '%';
+        });
+
+        if (window.location.pathname === '/add' || window.location.hash === '#/add') {
+            showAdd();
+        }
+    </script>
+</body>
+</html>
