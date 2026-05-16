@@ -799,9 +799,15 @@
             document.getElementById('scrollProgress').style.width = scrolled + '%';
         });
 
-        if (window.location.pathname === '/add' || window.location.hash === '#/add') {
-            showAdd();
+        function handleRoute() {
+            const path = window.location.pathname;
+            if (path.endsWith('/add') || path === '/add' || window.location.hash === '#/add') {
+                showAdd();
+            }
         }
+
+        window.addEventListener('popstate', handleRoute);
+        handleRoute();
     </script>
 </body>
 </html>
